@@ -1,0 +1,12 @@
+{
+  "replicaCount": 1,
+  "image": {
+    "repository": "yourrepo/rag-demo",
+    "tag": "latest",
+    "pullPolicy": "IfNotPresent"
+  },
+  "service": {
+    "type": "ClusterIP",
+    "port": 80
+  }
+}

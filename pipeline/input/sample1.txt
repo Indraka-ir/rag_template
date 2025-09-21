@@ -1,0 +1,1 @@
+This is a sample document for the RAG demo. It contains a unique token: ACME-REFUND-7352. Use it for testing retrieval.

@@ -1,0 +1,79 @@
+
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_TAG: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+
+before_script:
+  - docker info || true
+
+build_embedding:
+  stage: build
+  image: docker:latest
+  services: 
+    - docker:dind
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE/embedding:$CI_COMMIT_SHORT_SHA" -f embedding_service/Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE/embedding:$CI_COMMIT_SHORT_SHA"
+  only:
+    - main
+    - master
+
+build_vectordb:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE/vectordb:$CI_COMMIT_SHORT_SHA" -f vector_db/Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE/vectordb:$CI_COMMIT_SHORT_SHA"
+  only:
+    - main
+    - master
+
+build_llm:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE/llm:$CI_COMMIT_SHORT_SHA" -f llm_api/Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE/llm:$CI_COMMIT_SHORT_SHA"
+  only:
+    - main
+    - master
+
+build_rag:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE/rag:$CI_COMMIT_SHORT_SHA" -f rag_orchestrator/Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE/rag:$CI_COMMIT_SHORT_SHA"
+  only:
+    - main
+    - master
+
+build_ui:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE/rag-ui:$CI_COMMIT_SHORT_SHA" -f rag_ui/Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE/rag-ui:$CI_COMMIT_SHORT_SHA"
+  only:
+    - main
+    - master
+
+deploy_k8s:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  script:
+    - if [ -n "$KUBE_CONFIG_BASE64" ]; then echo "$KUBE_CONFIG_BASE64" | base64 -d > kubeconfig; export KUBECONFIG="$PWD/kubeconfig"; kubectl apply -f k8s/; else echo "No kubeconfig"; fi
+  only:
+    - main
+    - master

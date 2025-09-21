@@ -1,0 +1,8 @@
+{
+  "embedding_service_url": "http://localhost:8081",
+  "vector_db_url": "http://localhost:8001",
+  "llm_service_url": "http://localhost:8082",
+  "db_collection_name": "docs",
+  "n_results": 3,
+  "prompt_template": "Use the following context to answer the user's question. \\n\\nContext:\\n{context}\\n\\nQuestion:\\n{question}"
+}

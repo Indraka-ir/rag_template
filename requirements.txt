@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+sentence-transformers
+requests
+numpy
+annoy
+python-multipart
+streamlit
+openai
+pydantic
+tqdm
+python-dotenv
+chromadb
+pdfminer.six
+docx
+python-docx

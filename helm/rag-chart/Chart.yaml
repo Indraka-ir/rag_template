@@ -1,0 +1,6 @@
+apiVersion: v2
+name: rag-chart
+description: A simple Helm chart for the RAG demo
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

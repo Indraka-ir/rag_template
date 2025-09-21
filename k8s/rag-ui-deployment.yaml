@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-ui-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rag-ui
+  template:
+    metadata:
+      labels:
+        app: rag-ui
+    spec:
+      containers:
+      - name: rag-ui
+        image: $CI_REGISTRY_IMAGE/rag-ui:$CI_COMMIT_SHORT_SHA
+        ports:
+        - containerPort: 8501
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-ui-service
+spec:
+  selector:
+    app: rag-ui
+  ports:
+  - port: 8501
+    targetPort: 8501
